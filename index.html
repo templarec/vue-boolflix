@@ -20,23 +20,52 @@
 </head>
 <body>
 <div id="root">
-	<h1>BoolFlix</h1>
+
 	<div class="container">
+		<h1>BoolFlix</h1>
 		<nav>
 			<label for="inputSearch"></label><input v-model="searchTxt" id="inputSearch" type="text">
 			<button @click="searchMovies(searchTxt)">Cerca</button>
 		</nav>
+		<h3 v-if="searchResult.length > 0">Film: </h3>
 		<main>
 			<div v-for="film in searchResult" class="card">
 				<img :src="(film.poster_path != null) ? baseImgPath+film.poster_path : './img/no-logo.png' " alt="cover">
 				<div class="cover-overlay">
 					<p class="titolo">Titolo<span>{{film.title}}</span></p>
 					<p class="titolo-orig">Titolo originale<span>{{film.original_title}}</span></p>
-					<p class="lingua">Lingua originale<span><img :src="getFlag(film.original_language)" alt="language flag"></span></p>
+					<div class="lingua">Lingua originale
+						<span>
+							<img v-if="(getFlag(film.original_language)  !== film.original_language)" :src="getFlag(film.original_language)" alt="language flag">
+						</span>
+						<p v-if="(getFlag(film.original_language)  === film.original_language)">
+						{{film.original_language}}
+						</p>
+					</div>
 					<p class="voto">Voto medio<span>{{film.vote_average}}</span></p>
 				</div>
 			</div>
 		</main>
+		<hr v-if="searchResultTv.length > 0">
+		<h3 v-if="searchResultTv.length > 0">Serie Tv:</h3>
+		<section>
+			<div v-for="serieTv in searchResultTv" class="card">
+				<img :src="(serieTv.poster_path != null) ? baseImgPath+serieTv.poster_path : './img/no-logo.png' " alt="cover">
+				<div class="cover-overlay">
+					<p class="titolo">Titolo<span>{{serieTv.name}}</span></p>
+					<p class="titolo-orig">Titolo originale<span>{{serieTv.original_name}}</span></p>
+					<div class="lingua">Lingua originale
+						<span>
+							<img v-if="(getFlag(serieTv.original_language)  !== serieTv.original_language)" :src="getFlag(serieTv.original_language)" alt="language flag">
+						</span>
+						<p v-if="(getFlag(serieTv.original_language)  === serieTv.original_language)">
+							{{serieTv.original_language}}
+						</p>
+					</div>
+					<p class="voto">Voto medio<span>{{serieTv.vote_average}}</span></p>
+				</div>
+			</div>
+		</section>
 
 	</div>
 </div>

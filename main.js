@@ -6,8 +6,9 @@
 var app = new Vue({
 	el: '#root',
 	data: {
-		searchTxt: 'back to the future',
+		searchTxt: 'toc toc',
 		searchResult: [],
+		searchResultTv: [],
 		pagina: '',
 		totPagine: '',
 		baseImgPath: ''
@@ -27,9 +28,14 @@ var app = new Vue({
 			axios.get('https://api.themoviedb.org/3/search/movie?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
 				.then((risposta) => {
 					this.searchResult = risposta.data.results;
+					// this.pagina = risposta.data.page;
+					// this.totPagine = risposta.data.total_pages;
+				})
+			axios.get('https://api.themoviedb.org/3/search/tv?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
+				.then((risposta) => {
+					this.searchResultTv = risposta.data.results;
 					console.log(risposta.data);
-					this.pagina = risposta.data.page;
-					this.totPagine = risposta.data.total_pages;
+
 				})
 		},
 		getFlag: function (lingua) {
@@ -38,6 +44,8 @@ var app = new Vue({
 					return './img/it.png';
 				case "en":
 					return './img/en.png';
+				default:
+					return lingua;
 			}
 
 		}
