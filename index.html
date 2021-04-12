@@ -20,6 +20,25 @@
 </head>
 <body>
 <div id="root">
+	<h1>BoolFlix</h1>
+	<div class="container">
+		<nav>
+			<label for="inputSearch"></label><input v-model="searchTxt" id="inputSearch" type="text">
+			<button @click="searchMovies(searchTxt)">Cerca</button>
+		</nav>
+		<main>
+			<div v-for="film in searchResult" class="card">
+				<img :src="(film.poster_path != null) ? baseImgPath+film.poster_path : './img/no-logo.png' " alt="cover">
+				<div class="cover-overlay">
+					<p class="titolo">Titolo<span>{{film.title}}</span></p>
+					<p class="titolo-orig">Titolo originale<span>{{film.original_title}}</span></p>
+					<p class="lingua">Lingua originale<span><img :src="getFlag(film.original_language)" alt="language flag"></span></p>
+					<p class="voto">Voto medio<span>{{film.vote_average}}</span></p>
+				</div>
+			</div>
+		</main>
+
+	</div>
 </div>
 
 <!-- axios -->
