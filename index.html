@@ -20,49 +20,57 @@
 </head>
 <body>
 <div id="root">
-
+	<nav>
+		<img src="./img/logo.png" alt="Boolflix logo">
+		<label for="inputSearch"></label><input v-model="searchTxt" id="inputSearch" type="text">
+		<button @click="searchMovies(searchTxt)">Cerca</button>
+	</nav>
 	<div class="container">
-		<h1>BoolFlix</h1>
-		<nav>
-			<label for="inputSearch"></label><input v-model="searchTxt" id="inputSearch" type="text">
-			<button @click="searchMovies(searchTxt)">Cerca</button>
-		</nav>
-		<h3 v-if="searchResult.length > 0">Film: </h3>
-		<main>
+
+		<ul v-if="searchResultTv.length > 0 || searchResult.length > 0">
+			<li @click="tipo = 'film'" :class="(tipo === 'film') ? 'active-tab' : 'inactive-tab'">Film</li>
+			<li @click="tipo = 'serietv'" :class="(tipo === 'serietv') ? 'active-tab' : 'inactive-tab'">Serie tv</li>
+		</ul>
+		<main v-if="tipo === 'film' && searchResult.length > 0">
 			<div v-for="film in searchResult" class="card">
 				<img :src="(film.poster_path != null) ? baseImgPath+film.poster_path : './img/no-logo.png' " alt="cover">
-				<div class="cover-overlay">
+				<div v-on:mouseover="getCast(film.id);" v-on:mouseleave="purgeCast()" class="cover-overlay">
 					<p class="titolo">Titolo<span>{{film.title}}</span></p>
+					<p class="generi">Genere <span v-for="genere in currentGeneri" v-if="film.genre_ids.includes(genere.id)">{{genere.name}}&nbsp; </span> </p>
+					<p v-if="currentMovieCast.length > 0" class="cast">Cast<span v-for="(actor,i) in currentMovieCast" v-if="i < 4" >{{actor.name}}</span></p>
 					<p class="titolo-orig">Titolo originale<span>{{film.original_title}}</span></p>
 					<div class="lingua">Lingua originale
 						<span>
-							<img v-if="(getFlag(film.original_language)  !== film.original_language)" :src="getFlag(film.original_language)" alt="language flag">
+							<img :src="(film.original_language === 'en') ? 'https://www.countryflags.io/gb/shiny/64.png' :'https://www.countryflags.io/' + film.original_language + '/shiny/64.png'" alt="language flag">
 						</span>
-						<p v-if="(getFlag(film.original_language)  === film.original_language)">
-						{{film.original_language}}
-						</p>
-					</div>
-					<p class="voto">Voto medio<span>{{film.vote_average}}</span></p>
+<!--						<p v-if="(getFlag(film.original_language)  === film.original_language)">-->
+<!--						{{film.original_language}}-->
+<!--						</p>-->
+					</div><!--{{calcStar(film.vote_average)}}-->
+					<p class="voto">Rating<span><i v-for="stelle in calcStar(film.vote_average)" class="fas fa-star"></i><i v-for="stelle in (5 - calcStar(film.vote_average))" v-if="(calcStar(film.vote_average) > 0)" class="far fa-star"></i> <span v-if="(calcStar(film.vote_average) === 0)">Non applicabile</span> </span></p>
+					<p class="overview">Trama <span>{{film.overview}}</span> </p>
+
 				</div>
 			</div>
 		</main>
-		<hr v-if="searchResultTv.length > 0">
-		<h3 v-if="searchResultTv.length > 0">Serie Tv:</h3>
-		<section>
+		<section v-if="tipo === 'serietv' && searchResultTv.length > 0">
 			<div v-for="serieTv in searchResultTv" class="card">
 				<img :src="(serieTv.poster_path != null) ? baseImgPath+serieTv.poster_path : './img/no-logo.png' " alt="cover">
-				<div class="cover-overlay">
+				<div v-on:mouseover="getCastTv(serieTv.id)" v-on:mouseleave="purgeCast()" class="cover-overlay">
 					<p class="titolo">Titolo<span>{{serieTv.name}}</span></p>
+					<p class="generi">Genere <span v-for="genere in currentGeneriTv" v-if="serieTv.genre_ids.includes(genere.id)">{{genere.name}}&nbsp; </span> </p>
+					<p v-if="currentMovieCast.length > 0" class="cast">Cast<span v-for="(actor,i) in currentMovieCast" v-if="i < 4" >{{actor.name}}</span></p>
 					<p class="titolo-orig">Titolo originale<span>{{serieTv.original_name}}</span></p>
 					<div class="lingua">Lingua originale
-						<span>
-							<img v-if="(getFlag(serieTv.original_language)  !== serieTv.original_language)" :src="getFlag(serieTv.original_language)" alt="language flag">
+						<span> <!--v-if="(getFlag(serieTv.original_language)  !== serieTv.original_language)" -->
+							<img :src="(serieTv.original_language === 'en') ? 'https://www.countryflags.io/gb/shiny/64.png' :'https://www.countryflags.io/' + serieTv.original_language + '/shiny/64.png'" alt="language flag">
 						</span>
-						<p v-if="(getFlag(serieTv.original_language)  === serieTv.original_language)">
-							{{serieTv.original_language}}
-						</p>
+<!--						<p v-if="(getFlag(serieTv.original_language)  === serieTv.original_language)">-->
+<!--							{{serieTv.original_language}}-->
+<!--						</p>-->
 					</div>
-					<p class="voto">Voto medio<span>{{serieTv.vote_average}}</span></p>
+					<p class="voto">Rating<span><i v-for="stelle in calcStar(serieTv.vote_average)" class="fas fa-star"></i><i v-for="stelle in (5 - calcStar(serieTv.vote_average))" v-if="(calcStar(serieTv.vote_average) > 0)" class="far fa-star"></i> <span v-if="(calcStar(serieTv.vote_average) === 0)">Non applicabile</span> </span></p>
+					<p class="overview">Trama <span>{{serieTv.overview}}</span> </p>
 				</div>
 			</div>
 		</section>
