@@ -1,1 +1,1 @@
-Tempo impiegato progetto: 9 ore
+Tempo impiegato progetto: 11 ore
