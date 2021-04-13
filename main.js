@@ -25,7 +25,8 @@ var app = new Vue({
 		totPagineTv: 0,
 		currentPaginaTv: 1,
 		totalResults: 0,
-		totalResultsTv: 0
+		totalResultsTv: 0,
+		currentFlag: ''
 	},
 	mounted () {
 		axios.get('https://api.themoviedb.org/3/configuration?api_key=db6e548b4cda3f3d5550a22268a7e90c')
@@ -117,7 +118,25 @@ var app = new Vue({
 					})
 				})
 		},
-		getFlag: function (lingua) {
+		apiFlags:function (sigla_in)  {
+
+			axios.get('https://www.bearwebdesign.it/api/flag/')
+				.then((risposta)=>{
+					let bandiere = risposta.data.flag
+
+					bandiere.forEach((item)=>{
+						if (item.sigla_in === sigla_in){
+							 this.currentFlag = item.sigla_out
+
+						}
+
+					})
+
+				})
+
+		},
+
+		/*getFlag: function (lingua) {
 
 			switch (lingua) {
 				case "en":
@@ -262,6 +281,8 @@ var app = new Vue({
 					return 'ls';
 				case "sv":
 					return 'se';
+				case "ta":
+					return 'in';
 				case "tg":
 					return 'ir';
 				case "tk":
@@ -282,11 +303,139 @@ var app = new Vue({
 					return 'vn';
 				case "za":
 					return 'cn';
+				case "aa":
+					return 'et';
+				case "ab":
+					return 'ge';
+				case "av":
+					return 'ru';
+				case "ay":
+					return 'ar';
+				case "ce":
+					return 'ru';
+				case "da":
+					return 'dk';
+				case "dv":
+					return 'mv';
+				case "el":
+					return 'gr';
+				case "fa":
+					return 'ir';
+				case "ff":
+					return 'bj';
+				case "fy":
+					return 'nl';
+				case "gv":
+					return 'im';
+				case "ha":
+					return 'ng';
+				case "he":
+					return 'il';
+				case "hi":
+					return 'in';
+				case "ho":
+					return 'pg';
+				case "hy":
+					return 'am';
+				case "hz":
+					return 'na';
+				case "ig":
+					return 'ng';
+				case "ii":
+					return 'cn';
+				case "ik":
+					return 'gl';
+				case "iu":
+					return 'ca';
+				case "jv":
+					return 'id';
+				case "ka":
+					return 'ge';
+				case "kj":
+					return 'ao';
+				case "kk":
+					return 'kz';
+				case "kl":
+					return 'gl';
+				case "ko":
+					return 'kp';
+				case "ks":
+					return 'in';
+				case "ku":
+					return 'tr';
+				case "kv":
+					return 'ru';
+				case "lg":
+					return 'ug';
+				case "ln":
+					return 'cd';
+				case "lo":
+					return 'la';
+				case "mi":
+					return 'nz';
+				case "nb":
+					return 'no';
+				case "nd":
+					return 'zw';
+				case "nn":
+					return 'no';
+				case "nv":
+					return 'us';
+				case "oc":
+					return 'fr';
+				case "oj":
+					return 'ca';
+				case "or":
+					return 'in';
+				case "os":
+					return 'ru';
+				case "pi":
+					return 'in';
+				case "qu":
+					return 'ar';
+				case "rm":
+					return 'it';
+				case "rn":
+					return 'bi';
+				case "sq":
+					return 'al';
+				case "su":
+					return 'sd';
+				case "sw":
+					return 'tz';
+				case "te":
+					return 'in';
+				case "ti":
+					return 'et';
+				case "ts":
+					return 'mz';
+				case "ty":
+					return 'pf';
+				case "uk":
+					return 'ua';
+				case "ur":
+					return 'in';
+				case "wa":
+					return 'be';
+				case "wo":
+					return 'sn';
+				case "xh":
+					return 'za';
+				case "yi":
+					return 'il';
+				case "yo":
+					return 'ng';
+				case "zh":
+					return 'cn';
+				case "zu":
+					return 'za';
+				case "cs":
+					return 'cz';
 				default:
 					return lingua;
 			}
 
-		},
+		},*/
 		calcStar: function (rating) {
 			let base10 = parseFloat(rating);
 			let base5 = Math.round(base10 / 2);
@@ -320,5 +469,4 @@ var app = new Vue({
 
 	}
 });
-
 

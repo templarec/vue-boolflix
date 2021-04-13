@@ -43,14 +43,14 @@
 
 				<div v-for="film in searchResult" v-if="(film.genre_ids.includes(selectedGenere)) || (selectedGenere === '')" class="card">
 					<img :src="(film.poster_path != null) ? baseImgPath+film.poster_path : './img/no-logo.png' " alt="cover">
-					<div v-on:mouseover="getCast(film.id);" v-on:mouseleave="purgeCast()" class="cover-overlay">
+					<div v-on:mouseover="getCast(film.id); apiFlags(film.original_language)" v-on:mouseleave="purgeCast()" class="cover-overlay">
 						<p class="titolo">Titolo<span>{{film.title}}</span></p>
 						<p class="generi">Genere<br> <span v-for="genere in currentGeneri" v-if="film.genre_ids.includes(genere.id)">{{genere.name}}&nbsp; </span> </p>
 						<p v-if="currentMovieCast.length > 0" class="cast">Cast<span v-for="(actor,i) in currentMovieCast" v-if="i < 4" >{{actor.name}}</span></p>
 						<p class="titolo-orig">Titolo originale<span>{{film.original_title}}</span></p>
 						<div class="lingua">Lingua originale
 							<span>
-							<img :src="'https://www.countryflags.io/' + getFlag(film.original_language) + '/shiny/64.png'" :alt="film.original_language">
+							<img :src="'https://www.countryflags.io/' + currentFlag + '/shiny/64.png'" :alt="film.original_language">
 						</span>
 
 						</div>
@@ -69,14 +69,14 @@
 			</ul>
 			<div v-for="serieTv in searchResultTv" v-if="(serieTv.genre_ids.includes(selectedGenereTv)) || (selectedGenereTv === '')" class="card">
 				<img :src="(serieTv.poster_path != null) ? baseImgPath+serieTv.poster_path : './img/no-logo.png' " alt="cover">
-				<div v-on:mouseover="getCastTv(serieTv.id)" v-on:mouseleave="purgeCast()" class="cover-overlay">
+				<div v-on:mouseover="getCastTv(serieTv.id); apiFlags(serieTv.original_language)" v-on:mouseleave="purgeCast()" class="cover-overlay">
 					<p class="titolo">Titolo<span>{{serieTv.name}}</span></p>
 					<p class="generi">Genere<br> <span v-for="genere in currentGeneriTv" v-if="serieTv.genre_ids.includes(genere.id)">{{genere.name}}&nbsp; </span> </p>
 					<p v-if="currentMovieCast.length > 0" class="cast">Cast<span v-for="(actor,i) in currentMovieCast" v-if="i < 4" >{{actor.name}}</span></p>
 					<p class="titolo-orig">Titolo originale<span>{{serieTv.original_name}}</span></p>
 					<div class="lingua">Lingua originale
 						<span>
-							<img :src="'https://www.countryflags.io/' + getFlag(serieTv.original_language) + '/shiny/64.png'" :alt="serieTv.original_language">
+							<img :src="'https://www.countryflags.io/' + currentFlag + '/shiny/64.png'" :alt="serieTv.original_language">
 						</span>
         			</div>
 					<p class="voto">Rating<span><i v-for="stelle in calcStar(serieTv.vote_average)" class="fas fa-star"></i><i v-for="stelle in (5 - calcStar(serieTv.vote_average))" v-if="(calcStar(serieTv.vote_average) > 0)" class="far fa-star"></i> <span v-if="(calcStar(serieTv.vote_average) === 0)">Non applicabile</span> </span></p>
