@@ -22,17 +22,17 @@
 <div id="root">
 	<nav>
 		<img src="./img/logo.png" alt="Boolflix logo">
-		<label for="inputSearch"></label><input v-model="searchTxt" id="inputSearch" type="text">
+		<label for="inputSearch"></label><input @keyup.enter="searchMovies(searchTxt)" v-model="searchTxt" id="inputSearch" type="text">
 		<button @click="searchMovies(searchTxt)">Cerca</button>
 	</nav>
 	<div class="container">
 
 		<ul class="tabs" v-if="searchResultTv.length > 0 || searchResult.length > 0">
-			<li @click="tipo = 'film'; selectedGenere = ''" :class="(tipo === 'film') ? 'active-tab' : 'inactive-tab'">Film</li>
-			<li @click="tipo = 'serietv', selectedGenereTv = ''" :class="(tipo === 'serietv') ? 'active-tab' : 'inactive-tab'">Serie tv</li>
+			<li @click="tipo = 'film'; selectedGenere = ''; currentPagina = 1" :class="(tipo === 'film') ? 'active-tab' : 'inactive-tab'">Film</li>
+			<li @click="tipo = 'serietv'; selectedGenereTv = ''; currentPaginaTv = 1" :class="(tipo === 'serietv') ? 'active-tab' : 'inactive-tab'">Serie tv</li>
 		</ul>
 
-		<main v-if="tipo === 'film' && searchResult.length > 0">
+		<main v-if="tipo === 'film' && searchResult.length > 0 ">
 
 			<div class="covers">
 				<p>Filtra per genere:</p>
@@ -89,7 +89,14 @@
 				</div>
 			</div>
 		</section>
-
+		<div v-if="totPagine > 0 && tipo === 'film'" class="navigator">
+			<p>Pagina <input v-on:change="searchMovies(searchTxt)"  v-on:focusout="searchMovies(searchTxt)" v-model="currentPagina" min="1" :max="totPagine" type="number"> di {{totPagine}}</p>
+			<p>Totale risultati: {{totalResults}}</p>
+		</div>
+		<div v-if="totPagineTv > 0 && tipo === 'serietv'" class="navigator">
+			<p>Pagina <input v-on:change="searchMovies(searchTxt)" v-on:focusout="searchMovies(searchTxt)" v-model="currentPaginaTv" min="1" :max="totPagineTv" type="number"> di {{totPagineTv}}</p>
+			<p>Totale risultati: {{totalResultsTv}}</p>
+		</div>
 	</div>
 </div>
 

@@ -89,10 +89,12 @@ main {
 	flex-direction: column;
 }
 .covers > p {
-	margin: 0 auto;
+	width: 100%;
 	color: white;
 	margin-bottom: 5px;
+	text-align: center;
 }
+
 .breadcrumb {
 	font-size: 12px;
 	margin-bottom: 20px;
@@ -242,4 +244,15 @@ hr {
 .fa-star {
 	font-size: 16px;
 	color: gold;
+}
+.navigator {
+	margin-top: 5px;
+	color: white;
+}
+.navigator input {
+	width: 45px;
+}
+.navigator p:nth-child(2) {
+	font-size: 10px;
+	text-align: center;
 }

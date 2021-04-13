@@ -6,11 +6,11 @@
 var app = new Vue({
 	el: '#root',
 	data: {
-		searchTxt: 'avatar',
+		searchTxt: 'life',
 		searchResult: [],
 		searchResultTv: [],
-		pagina: '',
-		totPagine: '',
+		currentPagina: 1,
+		totPagine: 0,
 		baseImgPath: '',
 		currentMovieCast: [],
 		tipo: 'film',
@@ -21,7 +21,11 @@ var app = new Vue({
 		breadCrumb: [],
 		selectedGenere: '',
 		selectedGenereTv: '',
-		breadCrumbTv: []
+		breadCrumbTv: [],
+		totPagineTv: 0,
+		currentPaginaTv: 1,
+		totalResults: 0,
+		totalResultsTv: 0
 	},
 	mounted () {
 		axios.get('https://api.themoviedb.org/3/configuration?api_key=db6e548b4cda3f3d5550a22268a7e90c')
@@ -45,9 +49,11 @@ var app = new Vue({
 	computed: {},
 	methods: {
 		searchMovies: function (searchTxt) {
-			axios.get('https://api.themoviedb.org/3/search/movie?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
+			axios.get('https://api.themoviedb.org/3/search/movie?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt + '&page=' + this.currentPagina)
 				.then((risposta) => {
 					this.searchResult = risposta.data.results;
+					this.totPagine = risposta.data.total_pages;
+					this.totalResults = risposta.data.total_results;
 					this.generiSearch = [];
 					this.breadCrumb = [];
 					//mi salvo in array tutti i generi della ricerca
@@ -80,9 +86,11 @@ var app = new Vue({
 					// this.pagina = risposta.data.page;
 					// this.totPagine = risposta.data.total_pages;
 				})
-			axios.get('https://api.themoviedb.org/3/search/tv?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
+			axios.get('https://api.themoviedb.org/3/search/tv?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt+ '&page=' + this.currentPaginaTv)
 				.then((risposta) => {
 					this.searchResultTv = risposta.data.results;
+					this.totPagineTv = risposta.data.total_pages;
+					this.totalResultsTv = risposta.data.total_results;
 					this.generiSearchTv = [];
 					this.breadCrumbTv = [];
 					//mi salvo in array tutti i generi della ricerca
