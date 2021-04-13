@@ -6,7 +6,7 @@
 var app = new Vue({
 	el: '#root',
 	data: {
-		searchTxt: '',
+		searchTxt: 'avatar',
 		searchResult: [],
 		searchResultTv: [],
 		pagina: '',
@@ -15,12 +15,18 @@ var app = new Vue({
 		currentMovieCast: [],
 		tipo: 'film',
 		currentGeneri: [],
-		currentGeneriTv: []
+		currentGeneriTv: [],
+		generiSearch: [],
+		generiSearchTv: [],
+		breadCrumb: [],
+		selectedGenere: '',
+		selectedGenereTv: '',
+		breadCrumbTv: []
 	},
 	mounted () {
 		axios.get('https://api.themoviedb.org/3/configuration?api_key=db6e548b4cda3f3d5550a22268a7e90c')
 			.then((configs) => {
-				let size = configs.data.images.logo_sizes[4];
+				let size = configs.data.images.poster_sizes[3];
 				let base = configs.data.images.base_url;
 				this.baseImgPath = base+size;
 
@@ -33,7 +39,7 @@ var app = new Vue({
 		axios.get('https://api.themoviedb.org/3/genre/tv/list?api_key=db6e548b4cda3f3d5550a22268a7e90c')
 			.then((risposta) => {
 				this.currentGeneriTv = risposta.data.genres
-				console.log(this.currentGeneriTv)
+
 			})
 	},
 	computed: {},
@@ -42,14 +48,65 @@ var app = new Vue({
 			axios.get('https://api.themoviedb.org/3/search/movie?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
 				.then((risposta) => {
 					this.searchResult = risposta.data.results;
+					this.generiSearch = [];
+					this.breadCrumb = [];
+					//mi salvo in array tutti i generi della ricerca
+					risposta.data.results.forEach((item)=>{
+						item.genre_ids.forEach((elemento)=>{
+							if (!this.generiSearch.includes(elemento)){
+
+								this.generiSearch.push(elemento);
+							}
+
+						})
+
+					})
+					//associo id e name e li pusho in nuovo array
+					this.currentGeneri.forEach((item)=>{
+						this.generiSearch.forEach((elemento)=>{
+							if (item.id === elemento) {
+								let tempObj = {
+									id: item.id,
+									name: item.name
+								}
+								this.breadCrumb.push(tempObj)
+
+							}
+
+						})
+
+					})
+
 					// this.pagina = risposta.data.page;
 					// this.totPagine = risposta.data.total_pages;
 				})
 			axios.get('https://api.themoviedb.org/3/search/tv?api_key=db6e548b4cda3f3d5550a22268a7e90c&query='+ searchTxt)
 				.then((risposta) => {
 					this.searchResultTv = risposta.data.results;
+					this.generiSearchTv = [];
+					this.breadCrumbTv = [];
+					//mi salvo in array tutti i generi della ricerca
+					risposta.data.results.forEach((item)=>{
+						item.genre_ids.forEach((elemento)=>{
+							if (!this.generiSearchTv.includes(elemento)){
+								this.generiSearchTv.push(elemento);
+							}
 
+						})
 
+					})
+					this.currentGeneriTv.forEach((item)=>{
+						this.generiSearchTv.forEach((elemento)=>{
+							if (item.id === elemento) {
+								let tempObj = {
+									id: item.id,
+									name: item.name
+								}
+								this.breadCrumbTv.push(tempObj)
+							}
+
+						})
+					})
 				})
 		},
 		/*getFlag: function (lingua) {
@@ -86,11 +143,19 @@ var app = new Vue({
 			axios.get('https://api.themoviedb.org/3/tv/'+ movieId + '/credits?api_key=db6e548b4cda3f3d5550a22268a7e90c')
 				.then((risposta) => {
 					this.currentMovieCast = risposta.data.cast;
-					console.log(risposta.data.cast)
+
 				})
 		},
 		purgeCast: function () {
 			this.currentMovieCast = []
+		},
+		getSelGenere: function (genid) {
+			this.selectedGenere = genid
+			this.selectedGenereTv = genid
+
+
+
+
 		}
 
 	}
