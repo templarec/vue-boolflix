@@ -20,40 +20,52 @@
 </head>
 <body>
 <div id="root">
+	<!-- nav bar fixed logo e search-->
 	<nav>
 		<img src="./img/logo.png" alt="Boolflix logo">
+		<!--input di ricerca-->
 		<label for="inputSearch"></label><input @keyup.enter="searchMovies(searchTxt)" v-model="searchTxt" id="inputSearch" type="text">
 		<button @click="searchMovies(searchTxt)">Cerca</button>
 	</nav>
-	<div class="container">
 
+	<div class="container">
+		<!-- selezione tab film o serie tv-->
 		<ul class="tabs" v-if="searchResultTv.length > 0 || searchResult.length > 0">
 			<li @click="tipo = 'film'; selectedGenere = ''; currentPagina = 1" :class="(tipo === 'film') ? 'active-tab' : 'inactive-tab'">Film</li>
 			<li @click="tipo = 'serietv'; selectedGenereTv = ''; currentPaginaTv = 1" :class="(tipo === 'serietv') ? 'active-tab' : 'inactive-tab'">Serie tv</li>
 		</ul>
 
+		<!-- sezione risultati film-->
 		<main v-if="tipo === 'film' && searchResult.length > 0 ">
 
 			<div class="covers">
+				<!-- lista generi dei resultati della ricerca-->
 				<p>Filtra per genere:</p>
 				<ul class="breadcrumb">
 						<li @click="selectedGenere = ''" >Tutti</li>
 						<li v-for="genere in breadCrumb" @click="getSelGenere(genere.id)" :class="(genere.id === selectedGenere) ? 'active-br' : '' " >{{genere.name}}</li>
 					</ul>
-
+				<!-- lista film in base al genere -->
 				<div v-for="film in searchResult" v-if="(film.genre_ids.includes(selectedGenere)) || (selectedGenere === '')" class="card">
+					<!-- immagine del poster e mette placeholder se non trovato-->
 					<img :src="(film.poster_path != null) ? baseImgPath+film.poster_path : './img/no-logo.png' " alt="cover">
+					<!-- overlay on hover dei dettagli del film come cast titolo genere overview e lingua-->
+					<!-- genera lista cast e bandierina lingua al hover della card-->
 					<div v-on:mouseover="getCast(film.id); apiFlags(film.original_language)" v-on:mouseleave="purgeCast()" class="cover-overlay">
 						<p class="titolo">Titolo<span>{{film.title}}</span></p>
+						<!-- genera lista dei generi -->
 						<p class="generi">Genere<br> <span v-for="genere in currentGeneri" v-if="film.genre_ids.includes(genere.id)">{{genere.name}}&nbsp; </span> </p>
+						<!-- stampa cast generato poco sopra-->
 						<p v-if="currentMovieCast.length > 0" class="cast">Cast<span v-for="(actor,i) in currentMovieCast" v-if="i < 4" >{{actor.name}}</span></p>
 						<p class="titolo-orig">Titolo originale<span>{{film.original_title}}</span></p>
+						<!-- link dal sito country flag-->
 						<div class="lingua">Lingua originale
 							<span>
 							<img :src="'https://www.countryflags.io/' + currentFlag + '/shiny/64.png'" :alt="film.original_language">
 						</span>
 
 						</div>
+						<!-- calcolo stelle in base al rating e sottraggo il risultato da 5 per le stelle vuote-->
 						<p class="voto">Rating<span><i v-for="stelle in calcStar(film.vote_average)" class="fas fa-star"></i><i v-for="stelle in (5 - calcStar(film.vote_average))" v-if="(calcStar(film.vote_average) > 0)" class="far fa-star"></i> <span v-if="(calcStar(film.vote_average) === 0)">Non applicabile</span> </span></p>
 						<p class="overview">Trama <span>{{film.overview}}</span> </p>
 
@@ -61,6 +73,7 @@
 				</div>
 			</div>
 		</main>
+		<!-- sezione serie tv esattamente come per i film-->
 		<section v-if="tipo === 'serietv' && searchResultTv.length > 0">
 			<p>Filtra per genere:</p>
 			<ul class="breadcrumb">
@@ -84,10 +97,12 @@
 				</div>
 			</div>
 		</section>
+		<!--sezione pagination visualizzatore pagina corrente e totale pagina e seleziona risultati per pagina per film-->
 		<div v-if="totPagine > 0 && tipo === 'film'" class="navigator">
 			<p>Pagina <input v-on:change="searchMovies(searchTxt)"  v-on:focusout="searchMovies(searchTxt)" v-model="currentPagina" min="1" :max="totPagine" type="number"> di {{totPagine}}</p>
 			<p>Totale risultati: {{totalResults}}</p>
 		</div>
+		<!--sezione pagination visualizzatore pagina corrente e totale pagina e seleziona risultati per pagina per serie tv-->
 		<div v-if="totPagineTv > 0 && tipo === 'serietv'" class="navigator">
 			<p>Pagina <input v-on:change="searchMovies(searchTxt)" v-on:focusout="searchMovies(searchTxt)" v-model="currentPaginaTv" min="1" :max="totPagineTv" type="number"> di {{totPagineTv}}</p>
 			<p>Totale risultati: {{totalResultsTv}}</p>

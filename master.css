@@ -7,9 +7,6 @@
 	box-sizing: border-box;
 	font-family: 'Montserrat', sans-serif;
 }
-.debug  {
-	border: 1px solid black;
-}
 #root {
 	width: 100vw;
 	height: 100vh;
@@ -20,7 +17,6 @@
 	padding: 20px 0;
 	flex-direction: column;
 	position: relative;
-	/*padding-top: 75px;*/
 }
 nav img {
 	color: #b62929;
@@ -28,7 +24,6 @@ nav img {
 	height: 75px;
 	margin-right: auto;
 }
-
 .container {
 	width: 90%;
 	margin-top: 75px;
@@ -41,11 +36,9 @@ nav img {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
-
 .container::-webkit-scrollbar {
 	display: none;
 }
-
 .container .tabs li {
 	cursor: pointer;
 	width: 155px;
@@ -60,29 +53,24 @@ nav img {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
 }
-
 .container .tabs {
 	width: 80%;
 	margin-top: 30px;
 	display: flex;
 	justify-content: center;
 	align-items: flex-end;
-
 }
 .inactive-tab {
 	height: 40px;
 	color: #777;
 	background-color: rgba(255,0,0,.15);
-
 }
 .active-tab {
 	height: 50px;
 	background-color: rgba(255,0,0,.25);
 	font-weight: 900;
 	color: white;
-
 }
 main {
 	display: flex;
@@ -94,7 +82,6 @@ main {
 	margin-bottom: 5px;
 	text-align: center;
 }
-
 .breadcrumb {
 	font-size: 12px;
 	margin-bottom: 20px;
@@ -125,8 +112,6 @@ main {
 	padding: 0 20px;
 	padding-top: 40px;
 	padding-bottom: 20px;
-
-
 	border-radius: 25px;
 	background-color: rgba(255,0,0,.25);
 }
@@ -169,14 +154,12 @@ nav button:hover {
 	color: #fff;
 	background-color: rgba(255,0,0,.2);
 }
-
 .card {
 	position: relative;
 	font-size: 0;
 	margin: 0 20px;
 	margin-bottom: 40px;
 	overflow: hidden;
-
 }
 .card img   {
 	width: 342px;
@@ -184,7 +167,6 @@ nav button:hover {
 }
 .card:hover .cover-overlay {
 	display: flex;
-
 }
 .cover-overlay {
 	padding: 5px;
