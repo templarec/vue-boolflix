@@ -6,7 +6,7 @@
 var app = new Vue({
 	el: '#root',
 	data: {
-		searchTxt: 'life',
+		searchTxt: '',
 		searchResult: [],
 		searchResultTv: [],
 		currentPagina: 1,
@@ -118,11 +118,11 @@ var app = new Vue({
 					})
 				})
 		},
-		apiFlags:function (sigla_in)  {
-
-			axios.get('https://www.bearwebdesign.it/api/flag/')
+		apiFlags: function (sigla_in)  {
+			axios.get(`https://www.bearwebdesign.it/api/flag/index.php?query=${sigla_in}`)
 				.then((risposta)=>{
-					let bandiere = risposta.data.flag
+					this.currentFlag = risposta.data.flag[0].sigla_out
+					/*let bandiere = risposta.data.flag
 
 					bandiere.forEach((item)=>{
 						if (item.sigla_in === sigla_in){
@@ -130,7 +130,7 @@ var app = new Vue({
 
 						}
 
-					})
+					})*/
 
 				})
 
